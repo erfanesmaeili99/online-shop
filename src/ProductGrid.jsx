@@ -40,7 +40,7 @@ const ProductGrid = ({ searchTerm, selectedCategory, priceRange }) => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="product-grid">
+    <div className="product-grid" id="productsection">
       {products.map(product => (
         <ProductCard key={product.id} product={product} />
       ))}

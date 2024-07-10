@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -7,11 +6,16 @@ const Header = ({ onSearch }) => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
+  const [highestPricedProducts, setHighestPricedProducts] = useState([]);
 
   useEffect(() => {
     fetch('https://fakestoreapi.com/products/categories')
       .then(res => res.json())
       .then(json => setCategories(json));
+
+    fetch('https://fakestoreapi.com/products?sort=desc')
+      .then(res => res.json())
+      .then(json => setHighestPricedProducts(json.slice(0, 3))); // Get top 3 highest priced products
   }, []);
 
   const handleSearch = () => {
@@ -20,12 +24,12 @@ const Header = ({ onSearch }) => {
 
   return (
     <header>
-      <div class="banner_bg_main">
-        <div class="container">
-          <div class="header_section_top">
-            <div class="row">
-              <div class="col-sm-12">
-                <div class="custom_menu">
+      <div className="banner_bg_main">
+        <div className="container">
+          <div className="header_section_top">
+            <div className="row">
+              <div className="col-sm-12">
+                <div className="custom_menu">
                   <ul>
                     <li><a href="/">Home</a></li>
                     <li><a href="#">Add product</a></li>
@@ -36,20 +40,20 @@ const Header = ({ onSearch }) => {
             </div>
           </div>
         </div>
-        <div class="logo_section">
-          <div class="container">
-            <div class="row">
-              <div class="col-sm-12">
-                <div class="logo"><a href="index.html"></a></div>
+        <div className="logo_section">
+          <div className="container">
+            <div className="row">
+              <div className="col-sm-12">
+                <div className="logo"><a href="index.html"></a></div>
               </div>
             </div>
           </div>
         </div>
-        <div class="header_section">
-          <div class="container">
-            <div class="containt_main">
-              <div class="main">
-                <div class="input-group">
+        <div className="header_section">
+          <div className="container">
+            <div className="containt_main">
+              <div className="main">
+                <div className="input-group">
                   <div className="search-box">
                     <input
                       type="text"
@@ -87,40 +91,32 @@ const Header = ({ onSearch }) => {
             </div>
           </div>
         </div>
-        <div class="banner_section layout_padding">
-          <div class="container">
-            <div id="my_slider" class="carousel slide" data-ride="carousel">
-              <div class="carousel-inner">
-                <div class="carousel-item active">
-                  <div class="row">
-                    <div class="col-sm-12">
-                      <h1 class="banner_taital">Get Start <br />Your favriot shoping</h1>
-                      <div class="buynow_bt"><a href="#">Buy Now</a></div>
+        <div className="banner_section layout_padding">
+          <div className="container">
+            <div id="my_slider" className="carousel slide" data-ride="carousel">
+              <div className="carousel-inner carouselcontent">
+                {highestPricedProducts.map((product, index) => (
+                  <div key={product.id} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
+                    <div className="row">
+                      <div className="col-sm-12 carousel-inner-image">
+                        <img className='banner_image' src={product.image} alt={product.title} />
+                        <div>
+                          <h3 className="banner_taital carouseltitle">{product.title}</h3>
+                          <h2 >price :{product.price}</h2>
+                          <div className="buynow_bt"><Link to={`/product/${product.id}`}>Buy Now</Link></div>
+                        </div>
+                       
+                      </div>
+
                     </div>
                   </div>
-                </div>
-                <div class="carousel-item">
-                  <div class="row">
-                    <div class="col-sm-12">
-                      <h1 class="banner_taital">Get Start <br />Your favriot shoping</h1>
-                      <div class="buynow_bt"><a href="#">Buy Now</a></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="carousel-item">
-                  <div class="row">
-                    <div class="col-sm-12">
-                      <h1 class="banner_taital">Get Start <br />Your favriot shoping</h1>
-                      <div class="buynow_bt"><a href="#">Buy Now</a></div>
-                    </div>
-                  </div>
-                </div>
+                ))}
               </div>
-              <a class="carousel-control-prev" href="#my_slider" role="button" data-slide="prev">
-                <i class="fa fa-angle-left"></i>
+              <a className="carousel-control-prev" href="#my_slider" role="button" data-slide="prev">
+                <i className="fa fa-angle-left"></i>
               </a>
-              <a class="carousel-control-next" href="#my_slider" role="button" data-slide="next">
-                <i class="fa fa-angle-right"></i>
+              <a className="carousel-control-next" href="#my_slider" role="button" data-slide="next">
+                <i className="fa fa-angle-right"></i>
               </a>
             </div>
           </div>
